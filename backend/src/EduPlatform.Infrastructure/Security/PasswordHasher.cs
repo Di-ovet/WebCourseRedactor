@@ -5,7 +5,7 @@ namespace EduPlatform.Infrastructure.Security
 {
     internal sealed class PasswordHasher : IPasswordHasher
     {
-        private readonly PasswordHasher<object> _passwordHasher;
+        private readonly PasswordHasher<object> _passwordHasher = new();
 
         public string HashPassword(string password)
         {

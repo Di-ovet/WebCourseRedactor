@@ -12,6 +12,8 @@ public partial class Program
             options.UseNpgsql(
                 builder.Configuration.GetConnectionString("Default")
             ));
+        builder.Services.AddInfrastructure();
+
 
         var app = builder.Build();
 

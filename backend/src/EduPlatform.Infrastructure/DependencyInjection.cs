@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using EduPlatform.Application.Common.Security;
+using EduPlatform.Application.Users;
 using EduPlatform.Infrastructure.Security;
 
 namespace EduPlatform.Infrastructure;

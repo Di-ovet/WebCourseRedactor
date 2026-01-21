@@ -1,3 +1,4 @@
+using EduPlatform.Infrastructure;
 using EduPlatform.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

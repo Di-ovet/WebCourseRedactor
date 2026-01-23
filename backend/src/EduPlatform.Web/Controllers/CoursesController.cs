@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EduPlatform.Web.Controllers;
 
 [ApiController]
-[Route("api/courses")]
+[Route("api/[controller]")]
 public sealed class CoursesController(CreateCourseHandler handler) : ControllerBase
 {
     private readonly CreateCourseHandler _handler = handler;

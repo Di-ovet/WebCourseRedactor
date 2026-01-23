@@ -84,7 +84,7 @@ public partial class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-
+            //TODO: make swagger work
             app.MapOpenApi();
             app.UseSwagger();
             app.UseSwaggerUI();

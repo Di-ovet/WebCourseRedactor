@@ -5,15 +5,16 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using Polly;
 using System.Security.Claims;
 
 namespace EduPlatform.Web.Controllers
 {
 
-	[ApiController]
-	[Route("api/[controller]")]
-	public class AuthController : ControllerBase
-	{
+    [ApiController]
+    [Route("api/auth")]
+    public class AuthController : ControllerBase
+    {
         private readonly IUserRepository _users;
         private readonly IPasswordHasher _hasher;
         private readonly RegisterHandler _handler;
@@ -25,13 +26,12 @@ namespace EduPlatform.Web.Controllers
             _handler = handler;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(
-        RegistrationRequest request,
+        [HttpPost("register")]
+        public async Task<IActionResult> Create([FromBody] RegistrationRequest request,
         CancellationToken ct)
         {
-                var result = await _handler.Execute(request, ct);
-                return Ok(result);
+            var result = await _handler.Execute(request, ct);
+            return Ok(result);
         }
 
         [HttpPost("~/connect/token")]
@@ -44,7 +44,7 @@ namespace EduPlatform.Web.Controllers
 
            
             var user = await _users.FindByEmailAsync(email: request.Username, CancellationToken.None);
-            if (user == null || !_hasher.VerifyHashedPassword(hashedPassword: request.Password, user.PasswordHash))
+            if (user == null || !_hasher.VerifyHashedPassword(user, hashedPassword: request.Password, user.PasswordHash))
             {
                 return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
@@ -54,14 +54,17 @@ namespace EduPlatform.Web.Controllers
 
             identity.AddClaim(
                 OpenIddictConstants.Claims.Subject,
-                user.UserId.ToString());
+                user.UserId.ToString(),
+                OpenIddictConstants.Destinations.AccessToken
+            );
 
             identity.AddClaim(
                 OpenIddictConstants.Claims.Email,
-                user.Email);
+                user.Email,
+                OpenIddictConstants.Destinations.AccessToken
+            );
 
             var principal = new ClaimsPrincipal(identity);
-
             return SignIn(
                 principal,
                 OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);

@@ -12,13 +12,13 @@ namespace EduPlatform.Infrastructure.Security
             return _passwordHasher.HashPassword(null!, password);
         }
 
-        public bool VerifyHashedPassword(string hashedPassword, string providedPassword)
+        public bool VerifyHashedPassword(object user, string hashedPassword, string providedPassword)
         {
             var result = _passwordHasher.VerifyHashedPassword(
-            null!,
-            hashedPassword,
-            providedPassword
-        );
+            user,
+            providedPassword,
+            hashedPassword
+            );
 
             return result == PasswordVerificationResult.Success;
         }

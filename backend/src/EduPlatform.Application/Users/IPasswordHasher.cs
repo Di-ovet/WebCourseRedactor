@@ -7,6 +7,6 @@ namespace EduPlatform.Application.Users
     public interface IPasswordHasher
     {
         string HashPassword(string password);
-        bool VerifyHashedPassword(string hashedPassword, string providedPassword);
+        bool VerifyHashedPassword(object user, string hashedPassword, string providedPassword);
     }
 }

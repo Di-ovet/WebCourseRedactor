@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
+using OpenIddict.Validation.ServerIntegration;
+
 using System;
 
 public partial class Program
@@ -20,6 +22,7 @@ public partial class Program
         });
         
         builder.Services.AddInfrastructure();
+        builder.Services.AddControllers();
         builder.Services.AddOpenIddict()
 
         .AddCore(options =>
@@ -44,7 +47,7 @@ public partial class Program
 
         .AddValidation(options =>
         {
-            options.UseSystemNetHttp();
+            options.UseLocalServer();
             options.UseAspNetCore();
         });
 
@@ -52,7 +55,6 @@ public partial class Program
 
         builder.Services.AddAuthorization();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
 
         var app = builder.Build();
@@ -62,13 +64,12 @@ public partial class Program
         {
             //TODO: make swagger work
             app.MapOpenApi();
-            app.UseSwagger();
-            app.UseSwaggerUI();
         }
 
         app.UseHttpsRedirection();
-
+        
         app.UseAuthentication();
+        app.MapControllers();
         
 
         app.Run();
